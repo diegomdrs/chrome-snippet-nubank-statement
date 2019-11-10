@@ -64,9 +64,6 @@ function listarItemPago(listaDado) {
 function gerarListaSaidaConsole(listaDado) {
 
     return listaDado.map(function (dado) {
-
-
-
         return '#Nu ' + dado.descricao + ' ' +
             obterData(dado.data) + '\t\t' +
             dado.valor.toString().replace('.', ',')
