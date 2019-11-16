@@ -34,7 +34,13 @@ function gerarListaDado() {
         })
         .sort(function (divChildA) {
 
-            var regex = /^(#Home)/i
+            var regex = /.*(#Home).*/i
+
+            return divChildA.descricao.match(regex) ? -1 : !divChildA.descricao.match(regex) ? 1 : 0
+        })
+        .sort(function (divChildA) {
+
+            var regex = /.*(Spotify).*/i
 
             return divChildA.descricao.match(regex) ? -1 : !divChildA.descricao.match(regex) ? 1 : 0
         })
