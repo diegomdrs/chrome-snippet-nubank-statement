@@ -1,7 +1,10 @@
 var ELEMENT_NODE_CODE = 1
 var REGEX_HOME = /.*(#Home).*/i
 var REGEX_SAUDE = /.*(#Saude).*/i
-var REGEX_CONTAS = /.*(Spotify|TIM).*/
+var REGEX_CONTAS = [
+    /.*(Spotify).*/i,
+    /.*(TIM).*/
+]
 
 init()
 
@@ -14,7 +17,7 @@ function init() {
 
     var listaItemHome = obterListaCategoria(listaItemPago, [REGEX_HOME])
     var listaItemSaude = obterListaCategoria(listaItemPago, [REGEX_SAUDE])
-    var listaItemContas = obterListaCategoria(listaItemPago, [REGEX_CONTAS])
+    var listaItemContas = obterListaCategoria(listaItemPago, REGEX_CONTAS)
 
     console.log(gerarListaSaidaConsole(listaItemHome))
     console.log(gerarListaSaidaConsole(listaItemContas))
