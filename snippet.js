@@ -1,12 +1,13 @@
 var ELEMENT_NODE_CODE = 1
 
 var REGEX_PAGO = /(#PGO)/i
-var REGEX_HOME = /.*(#Home).*/i
-var REGEX_SAUDE = /.*(#Saude).*/i
-var REGEX_CONTAS = [
-    /.*(Spotify).*/i,
-    /.*(TIM).*/
-]
+
+var LISTA_CATEGORIA = {
+    REGEX_HOME: /.*(#Home).*/i,
+    REGEX_SAUDE: /.*(#Saude).*/i,
+    REGEX_TRANSPORTE: /.*(#Transporte).*/i,
+    REGEX_CONTAS: [/.*(Spotify).*/i, /.*(TIM).*/]
+}
 
 init()
 
@@ -17,13 +18,19 @@ function init() {
     var listaDado = obterListaDado()
     var listaItemPago = obterListaItemPago(listaDado)
 
-    var listaItemHome = obterListaCategoria(listaItemPago, [REGEX_HOME])
-    var listaItemSaude = obterListaCategoria(listaItemPago, [REGEX_SAUDE])
-    var listaItemContas = obterListaCategoria(listaItemPago, REGEX_CONTAS)
+    lista = Object.values(LISTA_CATEGORIA).forEach(function (categoria) {
 
-    console.log(gerarListaSaidaConsole(listaItemHome))
-    console.log(gerarListaSaidaConsole(listaItemContas))
-    console.log(gerarListaSaidaConsole(listaItemSaude))
+        // var lista = obterListaCategoria(listaItemPago, [categoria])
+
+        console.log(categoria.toArray())
+        console.log(lista)
+
+        console.log(gerarListaSaidaConsole(lista))
+    })
+
+    // var listaItemHome = obterListaCategoria(listaItemPago, [REGEX_HOME])
+    // var listaItemSaude = obterListaCategoria(listaItemPago, [REGEX_SAUDE])
+    // var listaItemContas = obterListaCategoria(listaItemPago, REGEX_CONTAS)
 }
 
 function obterListaDado() {
