@@ -24,18 +24,18 @@ function init() {
         var lista = obterListaCategoria(listaAccum,
             Array.isArray(categoria) ? categoria : [categoria])
 
-        listaAccum = listaAccum.filter(function(itemFilter) {
-            return lista.every(function(itemEvery) {
-                return !foo(itemFilter, itemEvery)
+        listaAccum = listaAccum.filter(function (itemFilter) {
+            return lista.every(function (itemEvery) {
+                return !isItensIguais(itemFilter, itemEvery)
             })
         })
 
-        if(lista.length)
+        if (lista.length)
             console.log('\n' + gerarListaSaidaConsole(lista))
 
         return listaAccum
 
-    },listaItemPago)
+    }, listaItemPago)
 }
 
 function obterListaDado() {
@@ -70,7 +70,7 @@ function obterListaItemPago(listaDado) {
     return listaDado
         .filter(function (itemFilter) {
             return listaPagos.every(function (itemEvery) {
-                return !foo(itemFilter, itemEvery)
+                return !isItensIguais(itemFilter, itemEvery)
             })
         })
         .filter(function (dado) {
@@ -78,18 +78,18 @@ function obterListaItemPago(listaDado) {
         })
 }
 
-function foo(itemA, itemB) {
+function isItensIguais(itemA, itemB) {
     return itemA.data === itemB.data &&
         itemA.descricao === itemB.descricao &&
         itemA.valor === itemB.valor
 }
 
-function gerarListaSaidaConsole(listaDado) {
+function gerarListaSaidaConsole(listaItem) {
 
-    return listaDado.map(function (dado) {
-        return '#Nu ' + dado.descricao + ' ' +
-            obterData(dado.data) + '\t\t' +
-            dado.valor.toString().replace('.', ',')
+    return listaItem.map(function (item) {
+        return '#Nu ' + item.descricao + ' ' +
+            obterData(item.data) + '\t\t' +
+            item.valor.toString().replace('.', ',')
     }).join('\n')
 }
 
@@ -125,6 +125,6 @@ function obterData(dado) {
     var re = new RegExp(Object.keys(listaMeses).join("|"), "gi");
 
     return dado.replace(re, function (matched) {
-        return listaMeses[matched];
-    }).replace(/\s+/g, '/');
+        return listaMeses[matched.toUpperCase()]
+    }).replace(/\s+/gi, '/')
 }
