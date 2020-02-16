@@ -1,4 +1,6 @@
 var ELEMENT_NODE_CODE = 1
+
+var REGEX_PAGO = /(#PGO)/i
 var REGEX_HOME = /.*(#Home).*/i
 var REGEX_SAUDE = /.*(#Saude).*/i
 var REGEX_CONTAS = [
@@ -44,23 +46,14 @@ function obterListaDado() {
             descricao: descricao,
             valor: parseFloat(valor.replace(',', '.'))
         }
-    })
-        .sort(compararDatas)
-        .sort(function (divChildA) {
-
-            var regex = /.*(Spotify).*/i
-
-            return divChildA.descricao.match(regex) ? -1 : !divChildA.descricao.match(regex) ? 1 : 0
-        })
+    }).sort(compararDatas)
 }
 
 function obterListaItemPago(listaDado) {
 
-    var regex = /(#PGO)/i
-
     var listaPagos = listaDado.filter(function (dado) {
-        return dado.descricao.match(regex)
-    });
+        return dado.descricao.match(REGEX_PAGO)
+    })
 
     return listaDado
         .filter(function (dadoFilter) {
@@ -88,9 +81,9 @@ function compararDatas(itemA, itemB) {
     return itemA.data > itemB.data ? -1 : itemA.data < itemB.data ? 1 : 0
 }
 
-function obterListaCategoria(listaItemPago, listaRegex) {
+function obterListaCategoria(listaItemPago, listaCategoriaRegex) {
     return listaItemPago.filter(function (item) {
-        return listaRegex.some(function (regex) {
+        return listaCategoriaRegex.some(function (regex) {
             return item.descricao.match(regex)
         })
     })
