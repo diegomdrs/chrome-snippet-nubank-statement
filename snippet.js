@@ -1,6 +1,9 @@
 var ELEMENT_NODE_CODE = 1
 var REGEX_HOME = /.*(#Home).*/i
-var REGEX_CONTAS = /.*(#Spotify|#TIM).*/i
+var REGEX_CONTAS = [
+    /.*(Spotify).*/i,
+    /.*(TIM).*/
+]
 
 init()
 
@@ -15,8 +18,7 @@ function init() {
     var listaItemContas = obterListaContas(listaItemPago)
 
     console.log(gerarListaSaidaConsole(listaItemHome))
-    console.log(gerarListaSaidaConsole(listaItemHome))
-    console.log(gerarListaSaidaConsole(listaItemHome))
+    console.log(gerarListaSaidaConsole(listaItemContas))
 }
 
 function obterListaDado() {
@@ -91,7 +93,9 @@ function obterListaHome(listaItemPago) {
 
 function obterListaContas(listaItemPago) {
     return listaItemPago.filter(function (item) {
-        return item.descricao.match(REGEX_CONTAS)
+        return REGEX_CONTAS.some(function (regex) {
+            return item.descricao.match(regex)
+        })
     })
 }
 
