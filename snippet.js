@@ -24,7 +24,7 @@ function init() {
             Array.isArray(categoria) ? categoria : [categoria])
 
         if(lista.length)
-            console.log(gerarListaSaidaConsole(lista))
+            console.log('\n' + gerarListaSaidaConsole(lista))
     })
 }
 
