@@ -24,13 +24,17 @@ function init() {
             Array.isArray(categoria) ? categoria : [categoria])
 
         listaAccum = listaAccum.filter(function(itemFilter) {
-            return lista.some(function(itemSome) {
-                return !foo(itemFilter, itemSome)
+            return lista.every(function(itemEvery) {
+                return !foo(itemFilter, itemEvery)
             })
         })
 
-        if(lista.length)
-            console.log('\n' + gerarListaSaidaConsole(lista))
+        console.log(categoria)
+        console.log(lista)
+        console.log(listaAccum)
+
+        // if(lista.length)
+        //     console.log('\n' + gerarListaSaidaConsole(lista))
 
         return listaAccum
 
@@ -68,8 +72,8 @@ function obterListaItemPago(listaDado) {
 
     return listaDado
         .filter(function (itemFilter) {
-            return listaPagos.every(function (itemSome) {
-                return !foo(itemFilter, itemSome)
+            return listaPagos.every(function (itemEvery) {
+                return !foo(itemFilter, itemEvery)
             })
         })
         .filter(function (dado) {
