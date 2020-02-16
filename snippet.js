@@ -6,7 +6,8 @@ var LISTA_CATEGORIA = {
     REGEX_HOME: /.*(#Home).*/i,
     REGEX_SAUDE: /.*(#Saude).*/i,
     REGEX_TRANSPORTE: /.*(#Transporte).*/i,
-    REGEX_CONTAS: [/.*(Spotify).*/i, /.*(TIM).*/]
+    REGEX_CONTAS: [/.*(Spotify).*/i, /.*(TIM).*/],
+    REGEX_RESTO: /.*/
 }
 
 init()
@@ -28,10 +29,6 @@ function init() {
                 return !foo(itemFilter, itemEvery)
             })
         })
-
-        console.log(categoria)
-        console.log(lista)
-        console.log(listaAccum)
 
         if(lista.length)
             console.log('\n' + gerarListaSaidaConsole(lista))
