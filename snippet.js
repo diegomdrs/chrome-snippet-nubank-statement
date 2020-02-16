@@ -23,7 +23,8 @@ function init() {
         var lista = obterListaCategoria(listaItemPago,
             Array.isArray(categoria) ? categoria : [categoria])
 
-        console.log(gerarListaSaidaConsole(lista))
+        if(lista.length)
+            console.log(gerarListaSaidaConsole(lista))
     })
 }
 
