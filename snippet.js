@@ -33,10 +33,7 @@ function gerarListaDado() {
             valor: parseFloat(valor.replace(',', '.'))
         }
     })
-        .sort(function (divChildA, divChildB) {
-
-            return divChildA.data > divChildB.data ? -1 : divChildA.data < divChildB.data ? 1 : 0
-        })
+        .sort(compararDatas)
         .sort(function (divChildA) {
 
             var regex = /.*(#Home).*/i
@@ -79,6 +76,11 @@ function gerarListaSaidaConsole(listaDado) {
             obterData(dado.data) + '\t\t' +
             dado.valor.toString().replace('.', ',')
     }).join('\n')
+}
+
+function compararDatas(divChildA, divChildB) {
+
+    return divChildA.data > divChildB.data ? -1 : divChildA.data < divChildB.data ? 1 : 0
 }
 
 function obterData(dado) {
