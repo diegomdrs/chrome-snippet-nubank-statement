@@ -5,6 +5,7 @@ var REGEX_PAGO = /(#PGO)/i
 var LISTA_CATEGORIA = {
     REGEX_HOME: /.*(#Home).*/i,
     REGEX_SAUDE: /.*(#Saude).*/i,
+    REGEX_CARRO: /.*(#Combustivel).*/i,
     REGEX_TRANSPORTE: /.*(#Transporte).*/i,
     REGEX_CONTAS: [/.*(Spotify).*/i, /.*(TIM).*/],
     REGEX_RESTO: /.*/
