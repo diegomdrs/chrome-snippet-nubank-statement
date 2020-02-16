@@ -1,11 +1,16 @@
-clear()
-
 var ELEMENT_NODE_CODE = 1
 
-var listaDado = gerarListaDado()
-var listaItemPago = listarItemPago(listaDado);
+init()
 
-console.log(gerarListaSaidaConsole(listaItemPago))
+function init() {
+
+    clear()
+
+    var listaDado = gerarListaDado()
+    var listaItemPago = listarItemPago(listaDado)
+
+    console.log(gerarListaSaidaConsole(listaItemPago))
+}
 
 function gerarListaDado() {
 
