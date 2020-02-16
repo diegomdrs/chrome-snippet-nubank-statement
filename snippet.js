@@ -1,5 +1,6 @@
 var ELEMENT_NODE_CODE = 1
 var REGEX_HOME = /.*(#Home).*/i
+var REGEX_CONTAS = /.*(#Spotify|#TIM).*/i
 
 init()
 
@@ -11,7 +12,10 @@ function init() {
     var listaItemPago = obterListaItemPago(listaDado)
 
     var listaItemHome = obterListaHome(listaItemPago)
+    var listaItemContas = obterListaContas(listaItemPago)
 
+    console.log(gerarListaSaidaConsole(listaItemHome))
+    console.log(gerarListaSaidaConsole(listaItemHome))
     console.log(gerarListaSaidaConsole(listaItemHome))
 }
 
@@ -82,6 +86,12 @@ function compararDatas(itemA, itemB) {
 function obterListaHome(listaItemPago) {
     return listaItemPago.filter(function (item) {
         return item.descricao.match(REGEX_HOME)
+    })
+}
+
+function obterListaContas(listaItemPago) {
+    return listaItemPago.filter(function (item) {
+        return item.descricao.match(REGEX_CONTAS)
     })
 }
 
