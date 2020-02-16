@@ -1,4 +1,5 @@
 var ELEMENT_NODE_CODE = 1
+var REGEX_HOME = /.*(#Home).*/i
 
 init()
 
@@ -6,13 +7,15 @@ function init() {
 
     clear()
 
-    var listaDado = gerarListaDado()
-    var listaItemPago = listarItemPago(listaDado)
+    var listaDado = obterListaDado()
+    var listaItemPago = obterListaItemPago(listaDado)
 
-    console.log(gerarListaSaidaConsole(listaItemPago))
+    var listaItemHome = obterListaHome(listaItemPago)
+
+    console.log(gerarListaSaidaConsole(listaItemHome))
 }
 
-function gerarListaDado() {
+function obterListaDado() {
 
     var div = document.getElementsByClassName("charges-list")[0];
     var listDivChild = div.childNodes;
@@ -36,21 +39,15 @@ function gerarListaDado() {
         .sort(compararDatas)
         .sort(function (divChildA) {
 
-            var regex = /.*(#Home).*/i
-
-            return divChildA.descricao.match(regex) ? -1 : !divChildA.descricao.match(regex) ? 1 : 0
-        })
-        .sort(function (divChildA) {
-
             var regex = /.*(Spotify).*/i
 
             return divChildA.descricao.match(regex) ? -1 : !divChildA.descricao.match(regex) ? 1 : 0
         })
 }
 
-function listarItemPago(listaDado) {
+function obterListaItemPago(listaDado) {
 
-    var regex = /(PGO)/i // /(#PGO)/i  
+    var regex = /(#PGO)/i
 
     var listaPagos = listaDado.filter(function (dado) {
         return dado.descricao.match(regex)
@@ -78,9 +75,14 @@ function gerarListaSaidaConsole(listaDado) {
     }).join('\n')
 }
 
-function compararDatas(divChildA, divChildB) {
+function compararDatas(itemA, itemB) {
+    return itemA.data > itemB.data ? -1 : itemA.data < itemB.data ? 1 : 0
+}
 
-    return divChildA.data > divChildB.data ? -1 : divChildA.data < divChildB.data ? 1 : 0
+function obterListaHome(listaItemPago) {
+    return listaItemPago.filter(function (item) {
+        return item.descricao.match(REGEX_HOME)
+    })
 }
 
 function obterData(dado) {
