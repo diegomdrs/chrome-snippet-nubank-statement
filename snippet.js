@@ -18,14 +18,23 @@ function init() {
     var listaDado = obterListaDado()
     var listaItemPago = obterListaItemPago(listaDado)
 
-    lista = Object.values(LISTA_CATEGORIA).forEach(function (categoria) {
+    Object.values(LISTA_CATEGORIA).reduce(function (listaAccum, categoria) {
 
-        var lista = obterListaCategoria(listaItemPago,
+        var lista = obterListaCategoria(listaAccum,
             Array.isArray(categoria) ? categoria : [categoria])
+
+        listaAccum = listaAccum.filter(function(itemFilter) {
+            return lista.some(function(itemSome) {
+                return !foo(itemFilter, itemSome)
+            })
+        })
 
         if(lista.length)
             console.log('\n' + gerarListaSaidaConsole(lista))
-    })
+
+        return listaAccum
+
+    },listaItemPago)
 }
 
 function obterListaDado() {
@@ -58,16 +67,20 @@ function obterListaItemPago(listaDado) {
     })
 
     return listaDado
-        .filter(function (dadoFilter) {
-            return listaPagos.every(function (dadoSome) {
-                return !(dadoFilter.data === dadoSome.data &&
-                    dadoFilter.descricao === dadoSome.descricao &&
-                    dadoFilter.valor === dadoSome.valor)
+        .filter(function (itemFilter) {
+            return listaPagos.every(function (itemSome) {
+                return !foo(itemFilter, itemSome)
             })
         })
         .filter(function (dado) {
             return dado.valor > 0
         })
+}
+
+function foo(itemA, itemB) {
+    return itemA.data === itemB.data &&
+        itemA.descricao === itemB.descricao &&
+        itemA.valor === itemB.valor
 }
 
 function gerarListaSaidaConsole(listaDado) {
