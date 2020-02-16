@@ -1,10 +1,7 @@
 var ELEMENT_NODE_CODE = 1
 var REGEX_HOME = /.*(#Home).*/i
 var REGEX_SAUDE = /.*(#Saude).*/i
-var REGEX_CONTAS = [
-    /.*(Spotify).*/i,
-    /.*(TIM).*/
-]
+var REGEX_CONTAS = /.*(Spotify|TIM).*/
 
 init()
 
@@ -15,9 +12,9 @@ function init() {
     var listaDado = obterListaDado()
     var listaItemPago = obterListaItemPago(listaDado)
 
-    var listaItemHome = obterListaCategoria(listaItemPago, REGEX_HOME)
-    var listaItemSaude = obterListaCategoria(listaItemPago, REGEX_SAUDE)
-    var listaItemContas = obterListaContas(listaItemPago)
+    var listaItemHome = obterListaCategoria(listaItemPago, [REGEX_HOME])
+    var listaItemSaude = obterListaCategoria(listaItemPago, [REGEX_SAUDE])
+    var listaItemContas = obterListaCategoria(listaItemPago, [REGEX_CONTAS])
 
     console.log(gerarListaSaidaConsole(listaItemHome))
     console.log(gerarListaSaidaConsole(listaItemContas))
@@ -88,15 +85,9 @@ function compararDatas(itemA, itemB) {
     return itemA.data > itemB.data ? -1 : itemA.data < itemB.data ? 1 : 0
 }
 
-function obterListaCategoria(listaItemPago, regex) {
+function obterListaCategoria(listaItemPago, listaRegex) {
     return listaItemPago.filter(function (item) {
-        return item.descricao.match(regex)
-    })
-}
-
-function obterListaContas(listaItemPago) {
-    return listaItemPago.filter(function (item) {
-        return REGEX_CONTAS.some(function (regex) {
+        return listaRegex.some(function (regex) {
             return item.descricao.match(regex)
         })
     })
