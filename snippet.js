@@ -33,8 +33,8 @@ function init() {
         console.log(lista)
         console.log(listaAccum)
 
-        // if(lista.length)
-        //     console.log('\n' + gerarListaSaidaConsole(lista))
+        if(lista.length)
+            console.log('\n' + gerarListaSaidaConsole(lista))
 
         return listaAccum
 
