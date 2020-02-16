@@ -20,17 +20,11 @@ function init() {
 
     lista = Object.values(LISTA_CATEGORIA).forEach(function (categoria) {
 
-        // var lista = obterListaCategoria(listaItemPago, [categoria])
-
-        console.log(categoria.toArray())
-        console.log(lista)
+        var lista = obterListaCategoria(listaItemPago,
+            Array.isArray(categoria) ? categoria : [categoria])
 
         console.log(gerarListaSaidaConsole(lista))
     })
-
-    // var listaItemHome = obterListaCategoria(listaItemPago, [REGEX_HOME])
-    // var listaItemSaude = obterListaCategoria(listaItemPago, [REGEX_SAUDE])
-    // var listaItemContas = obterListaCategoria(listaItemPago, REGEX_CONTAS)
 }
 
 function obterListaDado() {
