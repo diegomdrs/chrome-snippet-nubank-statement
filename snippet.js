@@ -16,6 +16,7 @@ function init() {
 
     clear()
 
+    var listaSaida = ''
     var listaDado = obterListaDado()
     var listaItemPago = obterListaItemPago(listaDado)
 
@@ -31,11 +32,14 @@ function init() {
         })
 
         if (lista.length)
-            console.log('\n' + gerarListaSaidaConsole(lista))
+            listaSaida = listaSaida.concat('\n\n' + gerarListaSaidaConsole(lista))
 
         return listaAccum
 
     }, listaItemPago)
+
+    copiarParaClipboard(listaSaida)
+    console.log(listaSaida)
 }
 
 function obterListaDado() {
@@ -127,4 +131,16 @@ function obterData(dado) {
     return dado.replace(re, function (matched) {
         return listaMeses[matched.toUpperCase()]
     }).replace(/\s+/gi, '/')
+}
+
+function copiarParaClipboard(listaSaida) {
+
+    var textArea = document.createElement("textarea");
+    document.body.appendChild(textArea);
+
+    textArea.value = listaSaida;
+    textArea.select();
+
+    document.execCommand("copy");
+    document.body.removeChild(textArea);
 }
