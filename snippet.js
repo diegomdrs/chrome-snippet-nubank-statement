@@ -99,7 +99,9 @@ function obterListaItemNaoPago(listaItem) {
         return dado.descricao.match(REGEX_PAGO)
     })
 
-    return listaItem
+    return listaItem.filter(function(item){
+        return item
+    })
 }
 
 function isItemValorIgual(itemA, itemB) {
