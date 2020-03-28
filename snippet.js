@@ -107,10 +107,23 @@ function obterListaItemNaoPago(listaItem) {
                 return !isItensIguais(itemPago, item)
             })
         })
+
+        // Remover itens com os valores dos #PGO
+        .filter(function (item) {
+            return listaItemPago.every(function (itemPago) {
+
+                if(item.valor < 0) {
+                    console.log('asdf ' + isItemValorIgual(itemPago.valor, Math.abs(item.valor)))
+                }
+
+                return item.valor < 0 &&
+                    isItemValorIgual(itemPago.valor, Math.abs(item.valor))
+            })
+        })
 }
 
-function isItemValorIgual(itemA, itemB) {
-    return itemA.valor === itemB.valor
+function isItemValorIgual(valorA, valorB) {
+    return valorA === valorB
 }
 
 function isItensIguais(itemA, itemB) {
