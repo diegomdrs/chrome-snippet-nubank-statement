@@ -95,15 +95,18 @@ function obterlistaItem() {
 
 function obterListaItemNaoPago(listaItem) {
 
-    var listaItemPago = listaItem.filter(function (dado) {
-        return dado.descricao.match(REGEX_PAGO)
+    var listaItemPago = listaItem.filter(function (item) {
+        return item.descricao.match(REGEX_PAGO)
     })
 
     return listaItem
-    
-    .filter(function(item){
-        return item
-    })
+
+        // Remover itens #PGOa
+        .filter(function (item) {
+            return listaItemPago.every(function (itemPago) {
+                return !isItensIguais(itemPago, item)
+            })
+        })
 }
 
 function isItemValorIgual(itemA, itemB) {
