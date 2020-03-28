@@ -32,8 +32,8 @@ function init() {
     clear()
 
     var listaSaida = ''
-    var listaDado = obterListaDado()
-    var listaItemNaoPago = obterListaItemNaoPago(listaDado)
+    var listaItem = obterlistaItem()
+    var listaItemNaoPago = obterListaItemNaoPago(listaItem)
 
     Object.values(LISTA_CATEGORIA).reduce(function (listaAccum, categoria) {
 
@@ -63,14 +63,14 @@ function init() {
     console.log(listaSaida)
 }
 
-function obterValorTotal(listaDado) {
+function obterValorTotal(listaItem) {
 
-    return listaDado.reduce(function (accum, dado) {
+    return listaItem.reduce(function (accum, dado) {
         return accum = accum + dado.valor
     }, 0)
 }
 
-function obterListaDado() {
+function obterlistaItem() {
 
     var div = document.getElementsByClassName("charges-list")[0];
     var listDivChild = div.childNodes;
@@ -93,23 +93,17 @@ function obterListaDado() {
     }).sort(compararDatas)
 }
 
-function obterListaItemNaoPago(listaDado) {
+function obterListaItemNaoPago(listaItem) {
 
-    return listaDado
+    var listaItemPago = listaItem.filter(function (dado) {
+        return dado.descricao.match(REGEX_PAGO)
+    })
 
-    // var listaPago = listaDado.filter(function (dado) {
-    //     return dado.descricao.match(REGEX_PAGO)
-    // })
+    return listaItem
+}
 
-    // return listaDado
-    //     .filter(function (itemFilter) {
-    //         return listaPago.every(function (itemEvery) {
-    //             return !isItensIguais(itemFilter, itemEvery)
-    //         })
-    //     })
-    // .filter(function (dado) {
-    //     return dado.valor > 0
-    // })
+function isItemValorIgual(itemA, itemB) {
+    return itemA.valor === itemB.valor
 }
 
 function isItensIguais(itemA, itemB) {
@@ -147,7 +141,7 @@ function obterData(data) {
         return data.replace(re, function (matched) {
             return LISTA_MESES[matched.toUpperCase()]
         }).replace(/\s+/gi, '/')
-    } else 
+    } else
         return ''
 }
 
