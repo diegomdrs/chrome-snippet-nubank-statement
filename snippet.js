@@ -53,13 +53,12 @@ function init() {
 
     }, listaItemNaoPago)
 
-    listaSaida = listaSaida.concat('\n\n\n' + gerarListaSaidaConsole(
-        [
-            { descricao: 'Total', valor: obterValorTotal(listaItemNaoPago) }
-        ]
+    // Adicionar
+    listaSaida = listaSaida.concat('\n\n' + gerarListaSaidaConsole(
+        [{ descricao: 'Total', valor: obterValorTotal(listaItemNaoPago) }]
     ))
 
-    // copiarParaClipboard(listaSaida)
+    copiarParaClipboard(listaSaida)
     console.log(listaSaida)
 }
 
@@ -101,23 +100,21 @@ function obterListaItemNaoPago(listaItem) {
 
     return listaItem
 
-        // Remover itens #PGOa
+        // Remover itens #PGO
         .filter(function (item) {
             return listaItemPago.every(function (itemPago) {
                 return !isItensIguais(itemPago, item)
             })
         })
 
-        // Remover itens com os valores dos #PGO
+        // Remover os pagamentos (negativos) com os valores dos #PGO
         .filter(function (item) {
             return listaItemPago.every(function (itemPago) {
 
-                if(item.valor < 0) {
-                    console.log('asdf ' + isItemValorIgual(itemPago.valor, Math.abs(item.valor)))
-                }
+                if (item.valor < 0)
+                    return !isItemValorIgual(itemPago.valor, Math.abs(item.valor))
 
-                return item.valor < 0 &&
-                    isItemValorIgual(itemPago.valor, Math.abs(item.valor))
+                return true
             })
         })
 }
