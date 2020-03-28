@@ -1,6 +1,20 @@
 var ELEMENT_NODE_CODE = 1
-
 var REGEX_PAGO = /(#PGO)/i
+
+var LISTA_MESES = {
+    JAN: '01',
+    FEV: '02',
+    MAR: '03',
+    ABR: '04',
+    MAI: '05',
+    JUN: '06',
+    JUL: '07',
+    AGO: '08',
+    SET: '09',
+    OUT: '10',
+    NOV: '11',
+    DEZ: '12'
+}
 
 var LISTA_CATEGORIA = {
     REGEX_HOME: /.*(#Home).*/i,
@@ -19,7 +33,7 @@ function init() {
 
     var listaSaida = ''
     var listaDado = obterListaDado()
-    var listaItemPago = obterListaItemPago(listaDado)
+    // var listaItemNaoPago = obterListaItemNaoPago(listaDado)
 
     Object.values(LISTA_CATEGORIA).reduce(function (listaAccum, categoria) {
 
@@ -37,10 +51,23 @@ function init() {
 
         return listaAccum
 
-    }, listaItemPago)
+    }, listaDado)
 
-    copiarParaClipboard(listaSaida)
+    listaSaida = listaSaida.concat('\n\n\n' + gerarListaSaidaConsole(
+        [
+            { descricao: 'Total', valor: obterValorTotal(listaDado) }
+        ]
+    ))
+
+    // copiarParaClipboard(listaSaida)
     console.log(listaSaida)
+}
+
+function obterValorTotal(listaDado) {
+
+    return listaDado.reduce(function (accum, dado) {
+        return accum = accum + dado.valor
+    }, 0)
 }
 
 function obterListaDado() {
@@ -66,21 +93,21 @@ function obterListaDado() {
     }).sort(compararDatas)
 }
 
-function obterListaItemPago(listaDado) {
+function obterListaItemNaoPago(listaDado) {
 
-    var listaPagos = listaDado.filter(function (dado) {
+    var listaPago = listaDado.filter(function (dado) {
         return dado.descricao.match(REGEX_PAGO)
     })
 
     return listaDado
         .filter(function (itemFilter) {
-            return listaPagos.every(function (itemEvery) {
+            return listaPago.every(function (itemEvery) {
                 return !isItensIguais(itemFilter, itemEvery)
             })
         })
-        .filter(function (dado) {
-            return dado.valor > 0
-        })
+    // .filter(function (dado) {
+    //     return dado.valor > 0
+    // })
 }
 
 function isItensIguais(itemA, itemB) {
@@ -110,28 +137,16 @@ function obterListaCategoria(listaItemPago, listaCategoriaRegex) {
     })
 }
 
-function obterData(dado) {
+function obterData(data) {
 
-    var listaMeses = {
-        JAN: '01',
-        FEV: '02',
-        MAR: '03',
-        ABR: '04',
-        MAI: '05',
-        JUN: '06',
-        JUL: '07',
-        AGO: '08',
-        SET: '09',
-        OUT: '10',
-        NOV: '11',
-        DEZ: '12'
-    }
+    if (data) {
+        var re = new RegExp(Object.keys(LISTA_MESES).join("|"), "gi");
 
-    var re = new RegExp(Object.keys(listaMeses).join("|"), "gi");
-
-    return dado.replace(re, function (matched) {
-        return listaMeses[matched.toUpperCase()]
-    }).replace(/\s+/gi, '/')
+        return data.replace(re, function (matched) {
+            return LISTA_MESES[matched.toUpperCase()]
+        }).replace(/\s+/gi, '/')
+    } else 
+        return ''
 }
 
 function copiarParaClipboard(listaSaida) {
