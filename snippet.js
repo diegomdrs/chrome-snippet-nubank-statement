@@ -33,7 +33,7 @@ function init() {
 
     var listaSaida = ''
     var listaDado = obterListaDado()
-    // var listaItemNaoPago = obterListaItemNaoPago(listaDado)
+    var listaItemNaoPago = obterListaItemNaoPago(listaDado)
 
     Object.values(LISTA_CATEGORIA).reduce(function (listaAccum, categoria) {
 
@@ -51,11 +51,11 @@ function init() {
 
         return listaAccum
 
-    }, listaDado)
+    }, listaItemNaoPago)
 
     listaSaida = listaSaida.concat('\n\n\n' + gerarListaSaidaConsole(
         [
-            { descricao: 'Total', valor: obterValorTotal(listaDado) }
+            { descricao: 'Total', valor: obterValorTotal(listaItemNaoPago) }
         ]
     ))
 
@@ -95,16 +95,18 @@ function obterListaDado() {
 
 function obterListaItemNaoPago(listaDado) {
 
-    var listaPago = listaDado.filter(function (dado) {
-        return dado.descricao.match(REGEX_PAGO)
-    })
-
     return listaDado
-        .filter(function (itemFilter) {
-            return listaPago.every(function (itemEvery) {
-                return !isItensIguais(itemFilter, itemEvery)
-            })
-        })
+
+    // var listaPago = listaDado.filter(function (dado) {
+    //     return dado.descricao.match(REGEX_PAGO)
+    // })
+
+    // return listaDado
+    //     .filter(function (itemFilter) {
+    //         return listaPago.every(function (itemEvery) {
+    //             return !isItensIguais(itemFilter, itemEvery)
+    //         })
+    //     })
     // .filter(function (dado) {
     //     return dado.valor > 0
     // })
