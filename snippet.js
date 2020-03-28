@@ -53,7 +53,7 @@ function init() {
 
     }, listaItemNaoPago)
 
-    // Adicionar
+    // Adicionar Total
     listaSaida = listaSaida.concat('\n\n' + gerarListaSaidaConsole(
         [{ descricao: 'Total', valor: obterValorTotal(listaItemNaoPago) }]
     ))
