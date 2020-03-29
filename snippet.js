@@ -149,11 +149,23 @@ function removerItemPagoComCorrespondentePagRecebido(listaItem) {
 
 // Remover os pagamentos (negativos) com correspondente nos valores #PGO
 function removerPagRecebidoComCorrepondenteItemPago(listaItem) {
+
     return listaItem.filter(function (item) {
         return listaPagRecebidoComCorrespondenteItemPago.every(function (pagRecebido) {
-            return !isItemValorIgual(pagRecebido.valor, item.valor)
+            
+            if(!isItemValorIgual(pagRecebido.valor, item.valor)) {
+                return true
+            }
+
+            return false
         })
     })
+
+    // return listaItem.filter(function (item) {
+    //     return listaPagRecebidoComCorrespondenteItemPago.every(function (pagRecebido) {
+    //         return !isItemValorIgual(pagRecebido.valor, item.valor)
+    //     })
+    // })
 }
 
 function isItemValorIgual(valorA, valorB) {
