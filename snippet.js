@@ -37,8 +37,9 @@ function init() {
 
     var listaItem = obterlistaItem()
 
-    listaItem.push({ data: "30 MAR", descricao: "Pagamento recebido", valor: -17.4 })
-    listaItem.push({ data: "30 MAR", descricao: "#Almoço #PGO", valor: -17.5 })
+    // Caso dos pagamentos recebidos e itens pagos não correspondentes
+    listaItem.push({ data: "30 MAR", descricao: "Pagamento recebido", valor: -33.34 })
+    listaItem.push({ data: "30 MAR", descricao: "#Almoço #PGO", valor: 33.33 })
 
     listaItem = listaItem.sort(compararDatas)
 
