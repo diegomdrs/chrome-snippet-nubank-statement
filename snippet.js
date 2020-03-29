@@ -33,9 +33,9 @@ function init() {
 
     clear()
 
-    var listaSaida = ''
-    var listaItem = obterlistaItem()
-    var listaItemNaoPago = obterListaItemNaoPago(listaItem)
+    let listaSaida = ''
+    let listaItem = obterlistaItem()
+    let listaItemNaoPago = obterListaItemNaoPago(listaItem)
 
     Object.values(LISTA_CATEGORIA).reduce((listaAccum, categoria) => {
 
@@ -57,7 +57,6 @@ function init() {
         [{ descricao: 'Total', valor: obterValorTotal(listaItemNaoPago) }]
     ))
 
-    copiarParaClipboard(listaSaida)
     console.log(listaSaida)
 }
 
@@ -67,17 +66,17 @@ function obterValorTotal(listaItem) {
 
 function obterlistaItem() {
 
-    var div = document.getElementsByClassName("charges-list")[0];
-    var listDivChild = div.childNodes;
+    const div = document.getElementsByClassName("charges-list")[0];
+    const listDivChild = div.childNodes;
 
     return Array.prototype.filter.call(listDivChild, divChild =>
         divChild.nodeType === ELEMENT_NODE_CODE
     ).map(divChild => {
 
-        var data = divChild.getElementsByClassName('time')[0].innerText
-        var descricaoNode = divChild.getElementsByClassName('description')[0]
-        var descricao = descricaoNode.innerText
-        var valor = divChild.getElementsByClassName('amount')[0].innerText
+        const data = divChild.getElementsByClassName('time')[0].innerText
+        const descricaoNode = divChild.getElementsByClassName('description')[0]
+        const descricao = descricaoNode.innerText
+        const valor = divChild.getElementsByClassName('amount')[0].innerText
 
         return {
             data: data,
@@ -89,8 +88,8 @@ function obterlistaItem() {
 
 function obterListaItemNaoPago(listaItem) {
 
-    var listaItemPago = listaItem.filter(item => item.descricao.match(REGEX_PAGO))
-    var listaPagamentoRecebido = listaItem.filter(pagamento => pagamento.valor < 0)
+    const listaItemPago = listaItem.filter(item => item.descricao.match(REGEX_PAGO))
+    const listaPagamentoRecebido = listaItem.filter(pagamento => pagamento.valor < 0)
 
     listaItemPagoComCorrespondentePagRecebido =
         obterListaItemPagoComCorrespondentePagRecebido(listaPagamentoRecebido, listaItemPago)
@@ -130,7 +129,7 @@ function removerPagRecebidoComCorrepondenteItemPago(listaItem) {
 
     return listaItem.reduce((listaAccum, item) => {
 
-        var index = listaPagRecebidoComCorrespondenteItemPago.indexOf(item)
+        const index = listaPagRecebidoComCorrespondenteItemPago.indexOf(item)
 
         if (index >= 0)
             listaPagRecebidoComCorrespondenteItemPago.splice(index, 1)
@@ -175,16 +174,4 @@ function obterData(data) {
         ).replace(/\s+/gi, '/')
     } else
         return ''
-}
-
-function copiarParaClipboard(listaSaida) {
-
-    var textArea = document.createElement("textarea");
-    document.body.appendChild(textArea);
-
-    textArea.value = listaSaida;
-    textArea.select();
-
-    document.execCommand("copy");
-    document.body.removeChild(textArea);
 }
