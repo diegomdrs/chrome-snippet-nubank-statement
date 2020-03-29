@@ -34,32 +34,16 @@ function init() {
     clear()
 
     var listaSaida = ''
-
     var listaItem = obterlistaItem()
-
-    // Caso dos pagamentos recebidos e itens pagos não correspondentes
-    // listaItem.push({ data: "30 MAR", descricao: "Pagamento recebido", valor: -33.34 })
-    // listaItem.push({ data: "30 MAR", descricao: "#Almoço #PGO", valor: 33.33 })
-
-    // Caso dos pagamentos recebidos repetidos
-    // listaItem.push({ data: "31 MAR", descricao: "Pagamento recebido", valor: -60.34 })
-    // listaItem.push({ data: "31 MAR", descricao: "Pagamento recebido", valor: -60.34 })
-    // listaItem.push({ data: "31 MAR", descricao: "#Almoço #PGO", valor: 60.34 })
-
-    listaItem = listaItem.sort(compararDatas)
-
     var listaItemNaoPago = obterListaItemNaoPago(listaItem)
 
-    Object.values(LISTA_CATEGORIA).reduce(function (listaAccum, categoria) {
+    Object.values(LISTA_CATEGORIA).reduce((listaAccum, categoria) => {
 
-        var lista = obterListaCategoria(listaAccum,
+        const lista = obterListaCategoria(listaAccum,
             Array.isArray(categoria) ? categoria : [categoria])
 
-        listaAccum = listaAccum.filter(function (itemFilter) {
-            return lista.every(function (itemEvery) {
-                return !isItensIguais(itemFilter, itemEvery)
-            })
-        })
+        listaAccum = listaAccum.filter(itemFilter =>
+            lista.every(itemEvery => !isItensIguais(itemFilter, itemEvery)))
 
         if (lista.length)
             listaSaida = listaSaida.concat('\n\n' + gerarListaSaidaConsole(lista))
@@ -78,10 +62,7 @@ function init() {
 }
 
 function obterValorTotal(listaItem) {
-
-    return listaItem.reduce(function (accum, dado) {
-        return accum = accum + dado.valor
-    }, 0)
+    return listaItem.reduce((accum, dado) => accum = accum + dado.valor, 0)
 }
 
 function obterlistaItem() {
@@ -89,10 +70,9 @@ function obterlistaItem() {
     var div = document.getElementsByClassName("charges-list")[0];
     var listDivChild = div.childNodes;
 
-    return Array.prototype.filter.call(listDivChild, function (divChild) {
-
-        return divChild.nodeType === ELEMENT_NODE_CODE;
-    }).map(function (divChild) {
+    return Array.prototype.filter.call(listDivChild, divChild =>
+        divChild.nodeType === ELEMENT_NODE_CODE
+    ).map(divChild => {
 
         var data = divChild.getElementsByClassName('time')[0].innerText
         var descricaoNode = divChild.getElementsByClassName('description')[0]
@@ -104,19 +84,13 @@ function obterlistaItem() {
             descricao: descricao,
             valor: parseFloat(valor.replace(',', '.'))
         }
-        // }).sort(compararDatas)
-    })
+    }).sort(compararDatas)
 }
 
 function obterListaItemNaoPago(listaItem) {
 
-    var listaItemPago = listaItem.filter(function (item) {
-        return item.descricao.match(REGEX_PAGO)
-    })
-
-    var listaPagamentoRecebido = listaItem.filter(function (pagamento) {
-        return pagamento.valor < 0
-    })
+    var listaItemPago = listaItem.filter(item => item.descricao.match(REGEX_PAGO))
+    var listaPagamentoRecebido = listaItem.filter(pagamento => pagamento.valor < 0)
 
     listaItemPagoComCorrespondentePagRecebido =
         obterListaItemPagoComCorrespondentePagRecebido(listaPagamentoRecebido, listaItemPago)
@@ -134,15 +108,11 @@ function obterListaItemPagoComCorrespondentePagRecebido(listaPagamentoRecebido, 
 }
 
 function obterListaPagRecebidoComCorrespondenteItemPago(listaPagamentoRecebido, listaItemPago) {
+    return listaPagamentoRecebido.reduce((listaAccum, pagRecebido) => {
 
-    return listaPagamentoRecebido.reduce(function (listaAccum, pagRecebido) {
-
-        if (
-            listaItemPago.some(itemPago => Math.abs(pagRecebido.valor) === itemPago.valor) &&
-            !listaAccum.some(item => item.valor === pagRecebido.valor)) {
-
+        if (listaItemPago.some(itemPago => Math.abs(pagRecebido.valor) === itemPago.valor)
+            && !listaAccum.some(item => item.valor === pagRecebido.valor))
             listaAccum.push(pagRecebido)
-        }
 
         return listaAccum
     }, [])
@@ -150,17 +120,15 @@ function obterListaPagRecebidoComCorrespondenteItemPago(listaPagamentoRecebido, 
 
 // Remover itens #PGO
 function removerItemPagoComCorrespondentePagRecebido(listaItem) {
-    return listaItem.filter(function (item) {
-        return listaItemPagoComCorrespondentePagRecebido.every(function (itemPago) {
-            return !isItensIguais(itemPago, item)
-        })
-    })
+    return listaItem.filter(item =>
+        listaItemPagoComCorrespondentePagRecebido.every(
+            itemPago => !isItensIguais(itemPago, item)))
 }
 
 // Remover os pagamentos recebidos com correspondentes #PGO
 function removerPagRecebidoComCorrepondenteItemPago(listaItem) {
 
-    return listaItem.reduce(function (listaAccum, item) {
+    return listaItem.reduce((listaAccum, item) => {
 
         var index = listaPagRecebidoComCorrespondenteItemPago.indexOf(item)
 
@@ -181,11 +149,10 @@ function isItensIguais(itemA, itemB) {
 
 function gerarListaSaidaConsole(listaItem) {
 
-    return listaItem.map(function (item) {
-        return '#Nu ' + item.descricao + ' ' +
-            obterData(item.data) + '\t\t' +
-            item.valor.toString().replace('.', ',')
-    }).join('\n')
+    return listaItem.map(item => '#Nu ' + item.descricao + ' ' +
+        obterData(item.data) + '\t\t' +
+        item.valor.toString().replace('.', ',')
+    ).join('\n')
 }
 
 function compararDatas(itemA, itemB) {
@@ -193,21 +160,19 @@ function compararDatas(itemA, itemB) {
 }
 
 function obterListaCategoria(listaItemPago, listaCategoriaRegex) {
-    return listaItemPago.filter(function (item) {
-        return listaCategoriaRegex.some(function (regex) {
-            return item.descricao.match(regex)
-        })
-    })
+    return listaItemPago.filter(item =>
+        listaCategoriaRegex.some(regex => item.descricao.match(regex))
+    )
 }
 
 function obterData(data) {
 
     if (data) {
-        var re = new RegExp(Object.keys(LISTA_MESES).join("|"), "gi");
+        const re = new RegExp(Object.keys(LISTA_MESES).join("|"), "gi")
 
-        return data.replace(re, function (matched) {
-            return LISTA_MESES[matched.toUpperCase()]
-        }).replace(/\s+/gi, '/')
+        return data.replace(re, matched =>
+            LISTA_MESES[matched.toUpperCase()]
+        ).replace(/\s+/gi, '/')
     } else
         return ''
 }
