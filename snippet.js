@@ -25,8 +25,7 @@ var LISTA_CATEGORIA = {
     REGEX_RESTO: /.*/
 }
 
-var listaItemPago = []
-var listaPagamentoRecebido = []
+var listaItemPagoComCorrespondentePagRecebido = []
 
 init()
 
@@ -35,7 +34,14 @@ function init() {
     clear()
 
     var listaSaida = ''
+
     var listaItem = obterlistaItem()
+
+    listaItem.push({ data: "30 MAR", descricao: "Pagamento recebido", valor: -17.4 })
+    listaItem.push({ data: "30 MAR", descricao: "#Almoço #PGO", valor: -17.5 })
+
+    listaItem = listaItem.sort(compararDatas)
+
     var listaItemNaoPago = obterListaItemNaoPago(listaItem)
 
     Object.values(LISTA_CATEGORIA).reduce(function (listaAccum, categoria) {
@@ -92,34 +98,43 @@ function obterlistaItem() {
             descricao: descricao,
             valor: parseFloat(valor.replace(',', '.'))
         }
-    }).sort(compararDatas)
+        // }).sort(compararDatas)
+    })
 }
 
 function obterListaItemNaoPago(listaItem) {
 
-    listaItemPago = listaItem.filter(function (item) {
+    var listaItemPago = listaItem.filter(function (item) {
         return item.descricao.match(REGEX_PAGO)
     })
 
-    listaPagamentoRecebido = listaItem.filter(function (pagamento) {
+    var listaPagamentoRecebido = listaItem.filter(function (pagamento) {
         return pagamento.valor < 0
     })
 
+    listaItemPagoComCorrespondentePagRecebido = listaItemPago.filter(
+        function (itemPago) {
+
+            return listaPagamentoRecebido.some(function (pagRecebido) {
+                return Math.abs(pagRecebido.valor) === itemPago.valor
+            })
+        })
+
     return listaItem
-        .filter(removerItemPago)
+        .filter(removerItemPagoComCorrespondentePagRecebido)
         .filter(removerPagRecebidoComCorrepondenteItemPago)
 }
 
 // Remover itens #PGO
-function removerItemPago(item) {
-    return listaItemPago.every(function (itemPago) {
+function removerItemPagoComCorrespondentePagRecebido(item) {
+    return listaItemPagoComCorrespondentePagRecebido.every(function (itemPago) {
         return !isItensIguais(itemPago, item)
     })
 }
 
 // Remover os pagamentos (negativos) com correspondente nos valores #PGO
 function removerPagRecebidoComCorrepondenteItemPago(item) {
-    return listaItemPago.every(function (itemPago) {
+    return listaItemPagoComCorrespondentePagRecebido.every(function (itemPago) {
 
         if (item.valor < 0)
             return !isItemValorIgual(itemPago.valor, Math.abs(item.valor))
