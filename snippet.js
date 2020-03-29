@@ -42,9 +42,9 @@ function init() {
     // listaItem.push({ data: "30 MAR", descricao: "#Almoço #PGO", valor: 33.33 })
 
     // Caso dos pagamentos recebidos repetidos
-    listaItem.push({ data: "31 MAR", descricao: "Pagamento recebido", valor: -60.34 })
-    listaItem.push({ data: "31 MAR", descricao: "Pagamento recebido", valor: -60.34 })
-    listaItem.push({ data: "31 MAR", descricao: "#Almoço #PGO", valor: 60.34 })
+    // listaItem.push({ data: "31 MAR", descricao: "Pagamento recebido", valor: -60.34 })
+    // listaItem.push({ data: "31 MAR", descricao: "Pagamento recebido", valor: -60.34 })
+    // listaItem.push({ data: "31 MAR", descricao: "#Almoço #PGO", valor: 60.34 })
 
     listaItem = listaItem.sort(compararDatas)
 
@@ -139,12 +139,18 @@ function obterListaItemPagoComCorrespondentePagRecebido(listaPagamentoRecebido, 
 }
 
 function obterListaPagRecebidoComCorrespondenteItemPago(listaPagamentoRecebido, listaItemPago) {
-    return listaPagamentoRecebido.filter(
-        function (pagRecebido) {
-            return listaItemPago.some(function (itemPago) {
-                return Math.abs(pagRecebido.valor) === itemPago.valor
-            })
-        })
+
+    return listaPagamentoRecebido.reduce(function (listaAccum, pagRecebido) {
+
+        if (
+            listaItemPago.some(itemPago => Math.abs(pagRecebido.valor) === itemPago.valor) &&
+            !listaAccum.some(item => item.valor === pagRecebido.valor)) {
+
+            listaAccum.push(pagRecebido)
+        }
+
+        return listaAccum
+    }, [])
 }
 
 // Remover itens #PGO
