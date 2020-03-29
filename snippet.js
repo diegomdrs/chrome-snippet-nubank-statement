@@ -132,22 +132,27 @@ function obterListaItemNaoPago(listaItem) {
             })
         })
 
+    listaItem = removerItemPagoComCorrespondentePagRecebido(listaItem)
+    listaItem = removerPagRecebidoComCorrepondenteItemPago(listaItem)
+
     return listaItem
-        .filter(removerItemPagoComCorrespondentePagRecebido)
-        .filter(removerPagRecebidoComCorrepondenteItemPago)
 }
 
 // Remover itens #PGO
-function removerItemPagoComCorrespondentePagRecebido(item) {
-    return listaItemPagoComCorrespondentePagRecebido.every(function (itemPago) {
-        return !isItensIguais(itemPago, item)
+function removerItemPagoComCorrespondentePagRecebido(listaItem) {
+    return listaItem.filter(function (item) {
+        return listaItemPagoComCorrespondentePagRecebido.every(function (itemPago) {
+            return !isItensIguais(itemPago, item)
+        })
     })
 }
 
 // Remover os pagamentos (negativos) com correspondente nos valores #PGO
-function removerPagRecebidoComCorrepondenteItemPago(item) {
-    return listaPagRecebidoComCorrespondenteItemPago.every(function (pagRecebido) {
-        return !isItemValorIgual(pagRecebido.valor, item.valor)
+function removerPagRecebidoComCorrepondenteItemPago(listaItem) {
+    return listaItem.filter(function (item) {
+        return listaPagRecebidoComCorrespondenteItemPago.every(function (pagRecebido) {
+            return !isItemValorIgual(pagRecebido.valor, item.valor)
+        })
     })
 }
 
