@@ -118,13 +118,8 @@ function obterListaItemNaoPago(listaItem) {
         return pagamento.valor < 0
     })
 
-    listaItemPagoComCorrespondentePagRecebido = listaItemPago.filter(
-        function (itemPago) {
-            return listaPagamentoRecebido.some(function (pagRecebido) {
-                return Math.abs(pagRecebido.valor) === itemPago.valor
-            })
-        })
-
+    listaItemPagoComCorrespondentePagRecebido =
+        obterListaItemPagoComCorrespondentePagRecebido(listaPagamentoRecebido, listaItemPago)
     listaPagRecebidoComCorrespondenteItemPago =
         obterListaPagRecebidoComCorrespondenteItemPago(listaPagamentoRecebido, listaItemPago)
 
@@ -132,6 +127,15 @@ function obterListaItemNaoPago(listaItem) {
     listaItem = removerPagRecebidoComCorrepondenteItemPago(listaItem)
 
     return listaItem
+}
+
+function obterListaItemPagoComCorrespondentePagRecebido(listaPagamentoRecebido, listaItemPago) {
+    return listaItemPago.filter(
+        function (itemPago) {
+            return listaPagamentoRecebido.some(function (pagRecebido) {
+                return Math.abs(pagRecebido.valor) === itemPago.valor
+            })
+        })
 }
 
 function obterListaPagRecebidoComCorrespondenteItemPago(listaPagamentoRecebido, listaItemPago) {
