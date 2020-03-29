@@ -98,12 +98,26 @@ function obterListaItemNaoPago(listaItem) {
         return item.descricao.match(REGEX_PAGO)
     })
 
+    var listaPagamentoRecebido = listaItem.filter(function (pagamento) {
+        return pagamento.valor < 0
+    })
+
     return listaItem
 
         // Remover itens #PGO
         .filter(function (item) {
             return listaItemPago.every(function (itemPago) {
+
+                const indicador = listaPagamentoRecebido.some(function(pagamento){
+                    itemPago.valor === Math.abs(pagamento.valor)
+                })
+
+                if(indicador){
+                    console.log('asdfasdf')
+                }
+
                 return !isItensIguais(itemPago, item)
+
             })
         })
 
