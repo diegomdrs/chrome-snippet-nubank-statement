@@ -150,22 +150,33 @@ function removerItemPagoComCorrespondentePagRecebido(listaItem) {
 // Remover os pagamentos recebidos com correspondentes #PGO
 function removerPagRecebidoComCorrepondenteItemPago(listaItem) {
 
-    return listaItem.filter(function (item) {
-        return listaPagRecebidoComCorrespondenteItemPago.every(function (pagRecebido) {
-            
-            if(!isItemValorIgual(pagRecebido.valor, item.valor)) {
+    return listaItem.reduce(function (listaAccum, item) {
 
-                var index = 
-                    listaPagRecebidoComCorrespondenteItemPago.indexOf(pagRecebido)
+        if (listaPagRecebidoComCorrespondenteItemPago.every(function (pagRecebido) {
+            return !isItemValorIgual(pagRecebido.valor, item.valor)
+        })) {
+            listaAccum.push(item)
+        }
 
-                listaPagRecebidoComCorrespondenteItemPago.splice(index, 1)
+        return listaAccum
+    }, [])
 
-                return true
-            }
+    // return listaItem.filter(function (item) {
+    //     return listaPagRecebidoComCorrespondenteItemPago.every(function (pagRecebido) {
 
-            return false
-        })
-    })
+    //         if(!isItemValorIgual(pagRecebido.valor, item.valor)) {
+
+    //             var index = 
+    //                 listaPagRecebidoComCorrespondenteItemPago.indexOf(pagRecebido)
+
+    //             listaPagRecebidoComCorrespondenteItemPago.splice(index, 1)
+
+    //             return true
+    //         }
+
+    //         return false
+    //     })
+    // })
 
     // return listaItem.filter(function (item) {
     //     return listaPagRecebidoComCorrespondenteItemPago.every(function (pagRecebido) {
