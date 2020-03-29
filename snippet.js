@@ -25,7 +25,7 @@ var LISTA_CATEGORIA = {
     REGEX_RESTO: /.*/
 }
 
-var listaItemPagoComCorrespondentePagRecebido = []
+var listaItemPagoComCorrespondentePagRecebido, listaPagRecebidoComCorrespondenteItemPago = []
 
 init()
 
@@ -114,8 +114,14 @@ function obterListaItemNaoPago(listaItem) {
 
     listaItemPagoComCorrespondentePagRecebido = listaItemPago.filter(
         function (itemPago) {
-
             return listaPagamentoRecebido.some(function (pagRecebido) {
+                return Math.abs(pagRecebido.valor) === itemPago.valor
+            })
+        })
+
+    listaPagRecebidoComCorrespondenteItemPago = listaPagamentoRecebido.filter(
+        function (pagRecebido) {
+            return listaItemPago.some(function (itemPago) {
                 return Math.abs(pagRecebido.valor) === itemPago.valor
             })
         })
@@ -134,12 +140,8 @@ function removerItemPagoComCorrespondentePagRecebido(item) {
 
 // Remover os pagamentos (negativos) com correspondente nos valores #PGO
 function removerPagRecebidoComCorrepondenteItemPago(item) {
-    return listaItemPagoComCorrespondentePagRecebido.every(function (itemPago) {
-
-        if (item.valor < 0)
-            return !isItemValorIgual(itemPago.valor, Math.abs(item.valor))
-
-        return true
+    return listaPagRecebidoComCorrespondenteItemPago.every(function (pagRecebido) {
+        return !isItemValorIgual(pagRecebido.valor, item.valor)
     })
 }
 
