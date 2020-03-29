@@ -41,6 +41,11 @@ function init() {
     listaItem.push({ data: "30 MAR", descricao: "Pagamento recebido", valor: -33.34 })
     listaItem.push({ data: "30 MAR", descricao: "#Almoço #PGO", valor: 33.33 })
 
+    // Caso dos pagamentos recebidos repetidos
+    listaItem.push({ data: "31 MAR", descricao: "Pagamento recebido", valor: -60.34 })
+    listaItem.push({ data: "31 MAR", descricao: "Pagamento recebido", valor: -60.34 })
+    listaItem.push({ data: "31 MAR", descricao: "#Almoço #PGO", valor: 60.34 })
+
     listaItem = listaItem.sort(compararDatas)
 
     var listaItemNaoPago = obterListaItemNaoPago(listaItem)
