@@ -25,6 +25,9 @@ var LISTA_CATEGORIA = {
     REGEX_RESTO: /.*/
 }
 
+var listaItemPago = []
+var listaPagamentoRecebido = []
+
 init()
 
 function init() {
@@ -94,43 +97,45 @@ function obterlistaItem() {
 
 function obterListaItemNaoPago(listaItem) {
 
-    var listaItemPago = listaItem.filter(function (item) {
+    listaItemPago = listaItem.filter(function (item) {
         return item.descricao.match(REGEX_PAGO)
     })
 
-    var listaPagamentoRecebido = listaItem.filter(function (pagamento) {
+    listaPagamentoRecebido = listaItem.filter(function (pagamento) {
         return pagamento.valor < 0
     })
 
     return listaItem
+        .filter(removerItemPago)
+        .filter(removerPagamentoRecebido)
+}
 
-        // Remover itens #PGO
-        .filter(function (item) {
-            return listaItemPago.every(function (itemPago) {
+// Remover os pagamentos (negativos) com os valores dos #PGO
+function removerPagamentoRecebido(item) {
+    return listaItemPago.every(function (itemPago) {
 
-                const indicador = listaPagamentoRecebido.some(function(pagamento){
-                    itemPago.valor === Math.abs(pagamento.valor)
-                })
+        if (item.valor < 0)
+            return !isItemValorIgual(itemPago.valor, Math.abs(item.valor))
 
-                if(indicador){
-                    console.log('asdfasdf')
-                }
+        return true
+    })
+}
 
-                return !isItensIguais(itemPago, item)
+// Remover itens #PGO
+function removerItemPago(item) {
+    return listaItemPago.every(function (itemPago) {
 
-            })
-        })
+        // const indicador = listaPagamentoRecebido.some(function(pagamento){
+        //     itemPago.valor === Math.abs(pagamento.valor)
+        // })
 
-        // Remover os pagamentos (negativos) com os valores dos #PGO
-        .filter(function (item) {
-            return listaItemPago.every(function (itemPago) {
+        // if(indicador){
+        //     console.log('asdfasdf')
+        // }
 
-                if (item.valor < 0)
-                    return !isItemValorIgual(itemPago.valor, Math.abs(item.valor))
+        return !isItensIguais(itemPago, item)
 
-                return true
-            })
-        })
+    })
 }
 
 function isItemValorIgual(valorA, valorB) {
