@@ -38,13 +38,13 @@ function init() {
     var listaItem = obterlistaItem()
 
     // Caso dos pagamentos recebidos e itens pagos não correspondentes
-    listaItem.push({ data: "30 MAR", descricao: "Pagamento recebido", valor: -33.34 })
-    listaItem.push({ data: "30 MAR", descricao: "#Almoço #PGO", valor: 33.33 })
+    // listaItem.push({ data: "30 MAR", descricao: "Pagamento recebido", valor: -33.34 })
+    // listaItem.push({ data: "30 MAR", descricao: "#Almoço #PGO", valor: 33.33 })
 
     // Caso dos pagamentos recebidos repetidos
-    listaItem.push({ data: "31 MAR", descricao: "Pagamento recebido", valor: -60.34 })
-    listaItem.push({ data: "31 MAR", descricao: "Pagamento recebido", valor: -60.34 })
-    listaItem.push({ data: "31 MAR", descricao: "#Almoço #PGO", valor: 60.34 })
+    // listaItem.push({ data: "31 MAR", descricao: "Pagamento recebido", valor: -60.34 })
+    // listaItem.push({ data: "31 MAR", descricao: "Pagamento recebido", valor: -60.34 })
+    // listaItem.push({ data: "31 MAR", descricao: "#Almoço #PGO", valor: 60.34 })
 
     listaItem = listaItem.sort(compararDatas)
 
@@ -155,7 +155,10 @@ function removerPagRecebidoComCorrepondenteItemPago(listaItem) {
             
             if(!isItemValorIgual(pagRecebido.valor, item.valor)) {
 
-                listaPagRecebidoComCorrespondenteItemPago
+                var index = 
+                    listaPagRecebidoComCorrespondenteItemPago.indexOf(pagRecebido)
+
+                listaPagRecebidoComCorrespondenteItemPago.splice(index, 1)
 
                 return true
             }
