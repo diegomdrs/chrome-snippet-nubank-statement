@@ -42,9 +42,9 @@ function init() {
     // listaItem.push({ data: "30 MAR", descricao: "#Almoço #PGO", valor: 33.33 })
 
     // Caso dos pagamentos recebidos repetidos
-    // listaItem.push({ data: "31 MAR", descricao: "Pagamento recebido", valor: -60.34 })
-    // listaItem.push({ data: "31 MAR", descricao: "Pagamento recebido", valor: -60.34 })
-    // listaItem.push({ data: "31 MAR", descricao: "#Almoço #PGO", valor: 60.34 })
+    listaItem.push({ data: "31 MAR", descricao: "Pagamento recebido", valor: -60.34 })
+    listaItem.push({ data: "31 MAR", descricao: "Pagamento recebido", valor: -60.34 })
+    listaItem.push({ data: "31 MAR", descricao: "#Almoço #PGO", valor: 60.34 })
 
     listaItem = listaItem.sort(compararDatas)
 
@@ -125,17 +125,22 @@ function obterListaItemNaoPago(listaItem) {
             })
         })
 
-    listaPagRecebidoComCorrespondenteItemPago = listaPagamentoRecebido.filter(
-        function (pagRecebido) {
-            return listaItemPago.some(function (itemPago) {
-                return Math.abs(pagRecebido.valor) === itemPago.valor
-            })
-        })
+    listaPagRecebidoComCorrespondenteItemPago =
+        obterListaPagRecebidoComCorrespondenteItemPago(listaPagamentoRecebido, listaItemPago)
 
     listaItem = removerItemPagoComCorrespondentePagRecebido(listaItem)
     listaItem = removerPagRecebidoComCorrepondenteItemPago(listaItem)
 
     return listaItem
+}
+
+function obterListaPagRecebidoComCorrespondenteItemPago(listaPagamentoRecebido, listaItemPago) {
+    return listaPagamentoRecebido.filter(
+        function (pagRecebido) {
+            return listaItemPago.some(function (itemPago) {
+                return Math.abs(pagRecebido.valor) === itemPago.valor
+            })
+        })
 }
 
 // Remover itens #PGO
@@ -152,41 +157,15 @@ function removerPagRecebidoComCorrepondenteItemPago(listaItem) {
 
     return listaItem.reduce(function (listaAccum, item) {
 
-        if (listaPagRecebidoComCorrespondenteItemPago.every(function (pagRecebido) {
-            return !isItemValorIgual(pagRecebido.valor, item.valor)
-        })) {
+        var index = listaPagRecebidoComCorrespondenteItemPago.indexOf(item)
+
+        if (index >= 0)
+            listaPagRecebidoComCorrespondenteItemPago.splice(index, 1)
+        else
             listaAccum.push(item)
-        }
 
         return listaAccum
     }, [])
-
-    // return listaItem.filter(function (item) {
-    //     return listaPagRecebidoComCorrespondenteItemPago.every(function (pagRecebido) {
-
-    //         if(!isItemValorIgual(pagRecebido.valor, item.valor)) {
-
-    //             var index = 
-    //                 listaPagRecebidoComCorrespondenteItemPago.indexOf(pagRecebido)
-
-    //             listaPagRecebidoComCorrespondenteItemPago.splice(index, 1)
-
-    //             return true
-    //         }
-
-    //         return false
-    //     })
-    // })
-
-    // return listaItem.filter(function (item) {
-    //     return listaPagRecebidoComCorrespondenteItemPago.every(function (pagRecebido) {
-    //         return !isItemValorIgual(pagRecebido.valor, item.valor)
-    //     })
-    // })
-}
-
-function isItemValorIgual(valorA, valorB) {
-    return valorA === valorB
 }
 
 function isItensIguais(itemA, itemB) {
