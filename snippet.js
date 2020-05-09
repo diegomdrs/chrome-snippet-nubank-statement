@@ -1,177 +1,238 @@
-var ELEMENT_NODE_CODE = 1
-var REGEX_PAGO = /(#PGO)/i
+module.exports = () => {
 
-var LISTA_MESES = {
-    JAN: '01',
-    FEV: '02',
-    MAR: '03',
-    ABR: '04',
-    MAI: '05',
-    JUN: '06',
-    JUL: '07',
-    AGO: '08',
-    SET: '09',
-    OUT: '10',
-    NOV: '11',
-    DEZ: '12'
-}
+    const { clear, document } = require('./mock-components')
 
-var LISTA_CATEGORIA = {
-    REGEX_HOME: /.*(#Home).*/i,
-    REGEX_SAUDE: /.*(#Saude).*/i,
-    REGEX_CARRO: /.*(#Combustivel).*/i,
-    REGEX_TRANSPORTE: /.*(#Transporte).*/i,
-    REGEX_CONTAS: [/.*(Spotify).*/i, /.*(TIM).*/],
-    REGEX_RESTO: /.*/
-}
+    // Inicio do snippet
 
-var listaItemPagoComCorrespondentePagRecebido, listaPagRecebidoComCorrespondenteItemPago = []
+    // Breakpoint iniciando aqui
+    var ELEMENT_NODE_CODE = 1
 
-init()
+    var LISTA_MESES = {
+        JAN: '01',
+        FEV: '02',
+        MAR: '03',
+        ABR: '04',
+        MAI: '05',
+        JUN: '06',
+        JUL: '07',
+        AGO: '08',
+        SET: '09',
+        OUT: '10',
+        NOV: '11',
+        DEZ: '12'
+    }
 
-function init() {
+    var REGEX_PAGO = /(#PGO)/i
 
-    clear()
+    var LISTA_REGEX_CATEGORIA = {
+        HOME: [/.*(#Home).*/i],
+        SAUDE: [/.*(#Saude).*/i],
+        CARRO: [/.*(#Combustivel).*/i],
+        TRANSPORTE: [/.*(#Transporte).*/i],
+        CONTAS: [/.*(Spotify).*/i, /.*(TIM).*/],
+        OUTROS: [/.*/]
+    }
 
-    let listaSaida = ''
-    let listaItem = obterlistaItem()
-    let listaItemNaoPago = obterListaItemNaoPago(listaItem)
+    var objSaida = {}
 
-    Object.values(LISTA_CATEGORIA).reduce((listaAccum, categoria) => {
+    init()
 
-        const lista = obterListaCategoria(listaAccum,
-            Array.isArray(categoria) ? categoria : [categoria])
+    function init() {
 
-        listaAccum = listaAccum.filter(itemFilter =>
-            lista.every(itemEvery => !isItensIguais(itemFilter, itemEvery)))
+        clear()
 
-        if (lista.length)
-            listaSaida = listaSaida.concat('\n\n' + gerarListaSaidaConsole(lista))
+        let listaItem = obterlistaItem()
+        let listaItemNaoPago = obterListaItemNaoPago(listaItem)
+        let mapCategoriaListaItem = obterMapCategoriaListaItem(listaItemNaoPago)
 
-        return listaAccum
+        objSaida = obterObjSaida(mapCategoriaListaItem)
 
-    }, listaItemNaoPago)
+        let textoSaidaConsole = gerarTextoSaidaConsole(objSaida)
 
-    // Adicionar Total
-    listaSaida = listaSaida.concat('\n\n' + gerarListaSaidaConsole(
-        [{ descricao: 'Total', valor: obterValorTotal(listaItemNaoPago) }]
-    ))
+        console.log(textoSaidaConsole)
+    }
 
-    console.log(listaSaida)
-}
-
-function obterValorTotal(listaItem) {
-    return listaItem.reduce((accum, dado) => accum = accum + dado.valor, 0)
-}
-
-function obterlistaItem() {
-
-    const div = document.getElementsByClassName("charges-list")[0];
-    const listDivChild = div.childNodes;
-
-    return Array.prototype.filter.call(listDivChild, divChild =>
-        divChild.nodeType === ELEMENT_NODE_CODE
-    ).map(divChild => {
-
-        const data = divChild.getElementsByClassName('time')[0].innerText
-        const descricaoNode = divChild.getElementsByClassName('description')[0]
-        const descricao = descricaoNode.innerText
-        const valor = divChild.getElementsByClassName('amount')[0].innerText
+    function obterObjSaida(mapCategoriaListaItem) {
 
         return {
-            data: data,
-            descricao: descricao,
-            valor: parseFloat(valor.replace(',', '.'))
+            total: obterValorTotal(mapCategoriaListaItem),
+            mapCategoriaListaItem: mapCategoriaListaItem
         }
-    }).sort(compararDatas)
-}
+    }
 
-function obterListaItemNaoPago(listaItem) {
+    function gerarTextoSaidaConsole(saida) {
 
-    const listaItemPago = listaItem.filter(item => item.descricao.match(REGEX_PAGO))
-    const listaPagamentoRecebido = listaItem.filter(pagamento => pagamento.valor < 0)
+        // foi usado a spread syntax para converter o Map.values() numa lista
+        let textoSaida = [...saida.mapCategoriaListaItem.values()].reduce((textoSaidaReduce, listaCategoria) => {
 
-    listaItemPagoComCorrespondentePagRecebido =
-        obterListaItemPagoComCorrespondentePagRecebido(listaPagamentoRecebido, listaItemPago)
-    listaPagRecebidoComCorrespondenteItemPago =
-        obterListaPagRecebidoComCorrespondenteItemPago(listaPagamentoRecebido, listaItemPago)
+            if (listaCategoria.length)
+                textoSaidaReduce = textoSaidaReduce.concat('\n\n' + listaCategoria.map(item => '#Nu ' + item.descricao + ' ' +
+                    obterData(item.data) + '\t\t' +
+                    item.valor.toString().replace('.', ',')
+                ).join('\n'))
 
-    listaItem = removerItemPagoComCorrespondentePagRecebido(listaItem)
-    listaItem = removerPagRecebidoComCorrepondenteItemPago(listaItem)
+            return textoSaidaReduce
 
-    return listaItem
-}
+        }, '')
 
-function obterListaItemPagoComCorrespondentePagRecebido(listaPagamentoRecebido, listaItemPago) {
-    return listaItemPago.filter(itemPago => listaPagamentoRecebido.some(pagRecebido => Math.abs(pagRecebido.valor) === itemPago.valor))
-}
+        textoSaida = textoSaida.concat('\n\n' + '#Nu Total' + '\t\t' +
+            saida.total.toFixed(2).replace('.', ','))
 
-function obterListaPagRecebidoComCorrespondenteItemPago(listaPagamentoRecebido, listaItemPago) {
-    return listaPagamentoRecebido.reduce((listaAccum, pagRecebido) => {
+        return textoSaida
+    }
 
-        if (listaItemPago.some(itemPago => Math.abs(pagRecebido.valor) === itemPago.valor)
-            && !listaAccum.some(item => item.valor === pagRecebido.valor))
-            listaAccum.push(pagRecebido)
+    function obterMapCategoriaListaItem(listaItemNaoPago) {
 
-        return listaAccum
-    }, [])
-}
+        let mapListaCategoria = new Map();
 
-// Remover itens #PGO
-function removerItemPagoComCorrespondentePagRecebido(listaItem) {
-    return listaItem.filter(item =>
-        listaItemPagoComCorrespondentePagRecebido.every(
-            itemPago => !isItensIguais(itemPago, item)))
-}
+        Object.keys(LISTA_REGEX_CATEGORIA).reduce((listaAccum, chaveCategoria) => {
 
-// Remover os pagamentos recebidos com correspondentes #PGO
-function removerPagRecebidoComCorrepondenteItemPago(listaItem) {
+            const listaCategoriaRegex = LISTA_REGEX_CATEGORIA[chaveCategoria]
+            const listaItemCategoria = obterListaItemCategoria(listaAccum, listaCategoriaRegex)
 
-    return listaItem.reduce((listaAccum, item) => {
+            if (listaItemCategoria.length)
+                mapListaCategoria.set(chaveCategoria, listaItemCategoria)
 
-        const index = listaPagRecebidoComCorrespondenteItemPago.indexOf(item)
+            // Removendo os itens da categoria atual do restante da lista de itens nao pagos
+            listaAccum = listaAccum.filter(itemFilter =>
+                listaItemCategoria.every(itemEvery => !isItensIguais(itemFilter, itemEvery)))
 
-        if (index >= 0)
-            listaPagRecebidoComCorrespondenteItemPago.splice(index, 1)
-        else
-            listaAccum.push(item)
+            return listaAccum
 
-        return listaAccum
-    }, [])
-}
+        }, listaItemNaoPago)
 
-function isItensIguais(itemA, itemB) {
-    return itemA.data === itemB.data &&
-        itemA.descricao === itemB.descricao &&
-        itemA.valor === itemB.valor
-}
+        return mapListaCategoria
+    }
 
-function gerarListaSaidaConsole(listaItem) {
+    function obterlistaItem() {
 
-    return listaItem.map(item => '#Nu ' + item.descricao + ' ' +
-        obterData(item.data) + '\t\t' +
-        item.valor.toString().replace('.', ',')
-    ).join('\n')
-}
+        const div = document.getElementsByClassName("charges-list")[0];
+        const listDivChild = div.childNodes;
 
-function compararDatas(itemA, itemB) {
-    return itemA.data > itemB.data ? -1 : itemA.data < itemB.data ? 1 : 0
-}
+        return Array.prototype.filter.call(listDivChild, divChild =>
+            divChild.nodeType === ELEMENT_NODE_CODE
+        ).map(divChild => {
 
-function obterListaCategoria(listaItemPago, listaCategoriaRegex) {
-    return listaItemPago.filter(item =>
-        listaCategoriaRegex.some(regex => item.descricao.match(regex))
-    )
-}
+            const data = divChild.getElementsByClassName('date')[0].textContent
+            const descricao = divChild.getElementsByClassName('description')[0].textContent
+            const valor = divChild.getElementsByClassName('amount')[0].textContent
 
-function obterData(data) {
+            return {
+                data: data,
+                descricao: descricao,
+                valor: parseFloat(valor.replace(',', '.'))
+            }
+        }).sort(compararDatas)
+    }
 
-    if (data) {
-        const re = new RegExp(Object.keys(LISTA_MESES).join("|"), "gi")
+    function obterValorTotal(mapCategoriaListaItem) {
 
-        return data.replace(re, matched =>
-            LISTA_MESES[matched.toUpperCase()]
-        ).replace(/\s+/gi, '/')
-    } else
-        return ''
+        return [...mapCategoriaListaItem.values()].reduce((totalListas, listaCategoria) =>
+            totalListas = totalListas + listaCategoria.reduce(
+                (totalLista, dado) => totalLista = totalLista + dado.valor, 0), 0)
+    }
+
+    function obterListaItemNaoPago(listaItem) {
+
+        const listaItemPago = listaItem.filter(item => item.descricao.match(REGEX_PAGO) && item.valor > 0)
+        const listaPagamentoRecebido = listaItem.filter(pagamento => pagamento.valor < 0)
+
+        listaItemPagoComCorrespondentePagRecebido =
+            obterListaItemPagoComCorrespondentePagRecebido(listaPagamentoRecebido, listaItemPago)
+        listaPagRecebidoComCorrespondenteItemPago =
+            obterListaPagRecebidoComCorrespondenteItemPago(listaPagamentoRecebido, listaItemPago)
+
+        listaItem = removerItemPagoComCorrespondentePagRecebido(listaItem,
+            listaItemPagoComCorrespondentePagRecebido)
+        listaItem = removerPagRecebidoComCorrepondenteItemPago(listaItem,
+            listaPagRecebidoComCorrespondenteItemPago)
+
+        return listaItem
+    }
+
+    function obterListaItemPagoComCorrespondentePagRecebido(listaPagamentoRecebido, listaItemPago) {
+
+        const listaPagamentoRecebidoCopia = listaPagamentoRecebido.slice()
+
+        return listaItemPago.reduce((listaRetorno, itemPago) => {
+
+            const indexItemPagoCorrespondentePagRecebido = listaPagamentoRecebidoCopia.findIndex(pagRecebido =>
+                Math.abs(pagRecebido.valor) === itemPago.valor
+            )
+
+            if (indexItemPagoCorrespondentePagRecebido > -1) {
+                listaPagamentoRecebidoCopia.splice(indexItemPagoCorrespondentePagRecebido, 1)
+                listaRetorno.push(itemPago)
+            }
+
+            return listaRetorno
+        }, [])
+    }
+
+    function obterListaPagRecebidoComCorrespondenteItemPago(listaPagamentoRecebido, listaItemPago) {
+
+        const listaItemPagoCopia = listaItemPago.slice()
+
+        return listaPagamentoRecebido.reduce((listaRetorno, pagRecebido) => {
+
+            const indexPagRecebidoComCorrespondenteItemPago = listaItemPagoCopia.findIndex(itemPago =>
+                itemPago.valor === Math.abs(pagRecebido.valor)
+            )
+
+            if (indexPagRecebidoComCorrespondenteItemPago > -1) {
+                listaItemPagoCopia.splice(indexPagRecebidoComCorrespondenteItemPago, 1)
+                listaRetorno.push(pagRecebido)
+            }
+
+            return listaRetorno
+        }, [])
+    }
+
+    // Remover itens #PGO
+    function removerItemPagoComCorrespondentePagRecebido(listaItem,
+        listaItemPagoComCorrespondentePagRecebido) {
+        return listaItem.filter(item =>
+            listaItemPagoComCorrespondentePagRecebido.every(
+                itemPago => !isItensIguais(itemPago, item)))
+    }
+
+    // Remover os pagamentos recebidos com correspondentes #PGO
+    function removerPagRecebidoComCorrepondenteItemPago(listaItem,
+        listaPagRecebidoComCorrespondenteItemPago) {
+        return listaItem.filter(item =>
+            listaPagRecebidoComCorrespondenteItemPago.every(
+                pagRecebido => !isItensIguais(pagRecebido, item)))
+    }
+
+    function isItensIguais(itemA, itemB) {
+        return itemA.data === itemB.data &&
+            itemA.descricao === itemB.descricao &&
+            itemA.valor === itemB.valor
+    }
+
+    function compararDatas(itemA, itemB) {
+        return itemA.data > itemB.data ? -1 : itemA.data < itemB.data ? 1 : 0
+    }
+
+    function obterListaItemCategoria(listaItemPago, listaCategoriaRegex) {
+        return listaItemPago.filter(item =>
+            listaCategoriaRegex.some(regex => item.descricao.match(regex))
+        )
+    }
+
+    function obterData(data) {
+
+        if (data) {
+            const re = new RegExp(Object.keys(LISTA_MESES).join("|"), "gi")
+
+            return data.replace(re, matched =>
+                LISTA_MESES[matched.toUpperCase()]
+            ).replace(/\s+/gi, '/')
+        } else
+            return ''
+    }
+
+    // Fim do snippet
+
+    return objSaida
 }

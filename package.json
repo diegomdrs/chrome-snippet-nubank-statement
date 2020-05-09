@@ -1,0 +1,23 @@
+{
+  "name": "chrome-snippet-fatura-nubank",
+  "version": "0.0.1",
+  "description": "Snippet para o Chrome para extrair um arquivo tabulado a partir da fatura do cartão disponível na versão web do Nubank",
+  "scripts": {
+    "test": "jest --runInBand --verbose"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/diegomdrs/chrome-snippet-fatura-nubank"
+  },
+  "bugs": {
+    "url": "https://github.com/diegomdrs/chrome-snippet-fatura-nubank/issues"
+  },
+  "homepage": "https://github.com/diegomdrs/chrome-snippet-fatura-nubank#readme",
+  "devDependencies": {
+    "jest": "^24.9.0",
+    "jsdom": "^16.2.2"
+  }
+}
