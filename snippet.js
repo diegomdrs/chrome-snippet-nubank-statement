@@ -1,10 +1,10 @@
 module.exports = () => {
 
+    // Breakpoint iniciando aqui
     const { clear, document } = require('./mock-components')
 
     // Inicio do snippet
 
-    // Breakpoint iniciando aqui
     var ELEMENT_NODE_CODE = 1
 
     var LISTA_MESES = {
@@ -83,7 +83,7 @@ module.exports = () => {
 
     function obterMapCategoriaListaItem(listaItemNaoPago) {
 
-        let mapListaCategoria = new Map();
+        let mapListaCategoria = new Map()
 
         Object.keys(LISTA_REGEX_CATEGORIA).reduce((listaAccum, chaveCategoria) => {
 
@@ -106,8 +106,8 @@ module.exports = () => {
 
     function obterlistaItem() {
 
-        const div = document.getElementsByClassName("charges-list")[0];
-        const listDivChild = div.childNodes;
+        const div = document.getElementsByClassName('charges-list')[0]
+        const listDivChild = div.childNodes
 
         return Array.prototype.filter.call(listDivChild, divChild =>
             divChild.nodeType === ELEMENT_NODE_CODE
@@ -224,7 +224,7 @@ module.exports = () => {
     function obterData(data) {
 
         if (data) {
-            const re = new RegExp(Object.keys(LISTA_MESES).join("|"), "gi")
+            const re = new RegExp(Object.keys(LISTA_MESES).join('|'), 'gi')
 
             return data.replace(re, matched =>
                 LISTA_MESES[matched.toUpperCase()]
