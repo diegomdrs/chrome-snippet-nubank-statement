@@ -22,23 +22,35 @@ describe('test gerais', () => {
     it('teste jun', () => {
 
         const listaItem = [
-            { data: '01 Mai', descricao: '2 Tênis', valor: '122,99' },
-            { data: '01 Mai', descricao: 'Foolura 7/12', valor: '56,25' },
-            { data: '01 Mai', descricao: '4 Camisetas 3/4', valor: '49,90' },
-            { data: '02 Mai', descricao: '#Almoço', valor: '25,39' },
-            { data: '04 Mai', descricao: '#Janta', valor: '32,00' },
-            { data: '04 Mai', descricao: '#Home Torneira', valor: '32,00' },
-            { data: '04 Mai', descricao: '#Home Torneira', valor: '32,00' }
+            { data: '01 MAI', descricao: 'Foolura 7/12', valor: '56,25' },
+            { data: '01 MAI', descricao: '2 Tênis 3/3', valor: '122,99' },
+            { data: '01 MAI', descricao: '4 Camisetas 3/4', valor: '49,90' },
+            { data: '02 MAI', descricao: '#Almoço', valor: '25,39' },
+            { data: '04 MAI', descricao: '#Janta', valor: '32,00' },
+            { data: '11 MAI', descricao: '#AppTransporte', valor: '5,31' },
+            { data: '11 MAI', descricao: 'Foogle', valor: '29,99' },
+            { data: '11 MAI', descricao: '#AppTransporte', valor: '5,06' },
+            { data: '11 MAI', descricao: 'Couver', valor: '10,00' },
+            { data: '12 MAI', descricao: 'Bar Foo #PGO', valor: '200,00' },
+            { data: '12 MAI', descricao: 'Pagamento recebido', valor: '-200,00' },
+            { data: '13 MAI', descricao: '#Saude Bar #PGO', valor: '123,50' },
+            { data: '14 MAI', descricao: 'Pagamento recebido', valor: '-123,50' },
+            { data: '15 MAI', descricao: 'Sfoorify', valor: '16,90' },
+            { data: '16 MAI', descricao: '#Saude', valor: '72,00' },
+            { data: '16 MAI', descricao: 'Bermuda', valor: '63,99' },
+            { data: '16 MAI', descricao: 'Foogle Babbel', valor: '79,90' },
+            { data: '16 MAI', descricao: 'Paralelepipedo', valor: '1.500,00' },
+            { data: '17 MAI', descricao: '#Almoço', valor: '22,89' }
         ]
 
         mockComponents.document = obterDocument(listaItem)
 
         const objSaida = snippet()
 
-        expect(objSaida.total.toFixed(2)).toEqual("350.53");
+        expect(objSaida.total.toFixed(2)).toEqual("2092.57");
     })
 
-    it('teste mai', () => {
+    xit('teste mai', () => {
 
         const listaItem = [
             { data: '01 abr', descricao: '4 Camisetas 2/4', valor: '49.9' },
@@ -102,7 +114,7 @@ describe('test gerais', () => {
         expect(objSaida.total.toFixed(2)).toEqual("828.28");
     })
 
-    it('teste abr', () => {
+    xit('teste abr', () => {
 
         const listaItem = [
             { data: "31 Mar", descricao: "#AppTransporte", valor: 11.06 },

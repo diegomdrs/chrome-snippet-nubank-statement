@@ -115,12 +115,13 @@ module.exports = () => {
 
             const data = divChild.getElementsByClassName('date')[0].textContent
             const descricao = divChild.getElementsByClassName('description')[0].textContent
-            const valor = divChild.getElementsByClassName('amount')[0].textContent
+            const valorSeparadorDecimalVirgula = divChild.getElementsByClassName('amount')[0].textContent
+            const valorSeparadorDecimalPonto = obterValorSeparadorDecimalPonto(valorSeparadorDecimalVirgula)
 
             return {
                 data: data,
                 descricao: descricao,
-                valor: parseFloat(valor.replace(',', '.'))
+                valor: valorSeparadorDecimalPonto
             }
         }).sort(compararDatas)
     }
@@ -230,6 +231,12 @@ module.exports = () => {
             ).replace(/\s+/gi, '/')
         } else
             return ''
+    }
+
+    function obterValorSeparadorDecimalPonto(valorSeparadorDecimalVirgula) {
+        return parseFloat(valorSeparadorDecimalVirgula.replace(/[,.]/g, function (x) {
+            return x == ',' ? '.' : ''
+        }))
     }
 
     // Fim do snippet
