@@ -27,7 +27,7 @@ module.exports = () => {
     var LISTA_REGEX_CATEGORIA = {
         HOME: [/.*(#Home).*/i],
         SAUDE: [/.*(#Saude).*/i],
-        CARRO: [/.*(#Combustivel).*/i],
+        SERVICO: [/.*(#Serviço).*/i],
         TRANSPORTE: [/.*(#Transporte).*/i],
         CONTAS: [/.*(Spotify).*/i, /.*(TIM).*/],
         OUTROS: [/.*/]
