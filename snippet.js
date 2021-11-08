@@ -120,13 +120,9 @@ module.exports = () => {
             const data = divChild.getElementsByClassName('date')[0].textContent
             const descricao = divChild.getElementsByClassName('description')[0].textContent
             const valorSeparadorDecimalVirgula = divChild.getElementsByClassName('amount')[0].textContent
-            const valorSeparadorDecimalPonto = obterValorSeparadorDecimalPonto(valorSeparadorDecimalVirgula)
+            const valor = obterValorSeparadorDecimalPonto(valorSeparadorDecimalVirgula)
 
-            return {
-                data: data,
-                descricao: descricao,
-                valor: valorSeparadorDecimalPonto
-            }
+            return { data, descricao, valor }
         }).sort(compararDatas)
     }
 
