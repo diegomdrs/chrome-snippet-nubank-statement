@@ -66,10 +66,14 @@ module.exports = () => {
         let textoSaida = [...saida.mapCategoriaListaItem.values()].reduce((textoSaidaReduce, listaCategoria) => {
 
             if (listaCategoria.length)
-                textoSaidaReduce = textoSaidaReduce.concat('\n\n' + listaCategoria.map(item => '#Nu ' + item.descricao + ' ' +
-                    obterData(item.data) + '\t\t' +
-                    item.valor.toString().replace('.', ',')
-                ).join('\n'))
+                textoSaidaReduce = textoSaidaReduce.concat('\n\n' + listaCategoria.map(item => {
+
+                    const descricao = item.descricao.trim().replace(/\s\s+/g, ' ')
+                    const data = obterData(item.data)
+                    const valor = item.valor.toString().replace('.', ',')
+
+                    return `#Nu ${descricao} ${data}\t\t${valor}`
+                }).join('\n'))
 
             return textoSaidaReduce
 
