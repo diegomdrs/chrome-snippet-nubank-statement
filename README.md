@@ -1,3 +1,3 @@
 # Chrome Snippet Nubank Statement
 
-Snippet para o Chrome para extrair um arquivo tabulado a partir da fatura do cartão disponível na versão web do Nubank
+Cria uma saída tabulada do extrato do cartão de crédito a partir do HTML da página da versão web do Nubank, utilizando um snippet do Chrome
